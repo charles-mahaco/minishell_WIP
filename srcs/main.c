@@ -46,9 +46,9 @@ void	get_absolute_path(char **cmd)
 	int		i;
 
 	i = -1;
-	path = strdup(getenv("PATH"));
+	path = ft_strdup(getenv("PATH"));
 	if (path == NULL)
-		path = strdup("/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin");
+		path = ft_strdup("/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin");
 	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
 	{
 		path_split = my_str_to_wordtab(path, ':');
@@ -63,8 +63,8 @@ void	get_absolute_path(char **cmd)
 			ft_strcat(bin, path_split[i]);
 			ft_strcat(bin, "/");
 			ft_strcat(bin, cmd[0]);
-			if (access(bin, F_OK) == 0)
-				break ;
+			/*if (access(bin, F_OK) == 0)
+				break ;*/
 			free(bin);
 			bin = NULL;
 		}

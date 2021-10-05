@@ -33,7 +33,7 @@ void	built_in_export(char *var, t_env *first)
 		if (get_env_var(var_name, first))
 			pop_lst(var_name, ft_strrchr(var, '=') + 1, &first);
 		else
-			add_tail(strdup(var), &first);
+			add_tail(ft_strdup(var), &first);
 		free(var_name);
 	}
 }
@@ -43,7 +43,10 @@ void	built_in_echo(char **var)
 	int	i;
 	int	l;
 
-	i = (!ft_strncmp(var[1], "-n", ft_strlen(var[0]))) ? 2 : 1;
+	if (!ft_strncmp(var[1], "-n", ft_strlen(var[0])))
+		i = 2;
+	else
+		i = 1;
 	while (var[i])
 	{
 		l = 0;
