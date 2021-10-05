@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: charles <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/05 16:01:26 by charles           #+#    #+#             */
+/*   Updated: 2021/10/05 16:01:29 by charles          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	exec_cmd(char **cmd)
@@ -44,13 +56,13 @@ void	get_absolute_path(char **cmd)
 		path = NULL;
 		while (path_split[++i])
 		{
-			bin = (char *)calloc(sizeof(char), (ft_strlen1(path_split[i])
-						+ 1 + ft_strlen1(cmd[0]) + 1));
+			bin = (char *)ft_calloc(sizeof(char), (ft_strlen(path_split[i])
+						+ 1 + ft_strlen(cmd[0]) + 1));
 			if (bin == NULL)
 				break ;
-			strcat(bin, path_split[i]);
-			strcat(bin, "/");
-			strcat(bin, cmd[0]);
+			ft_strcat(bin, path_split[i]);
+			ft_strcat(bin, "/");
+			ft_strcat(bin, cmd[0]);
 			if (access(bin, F_OK) == 0)
 				break ;
 			free(bin);
@@ -74,7 +86,7 @@ void	dup_env(char **envp, t_env **first)
 	i = 0;
 	while (envp[i])
 	{
-		add_tail(strdup(envp[i]), first);
+		add_tail(ft_strdup(envp[i]), first);
 		i++;
 	}
 }
@@ -84,7 +96,7 @@ char	*get_env_var(char *var, t_env *first)
 	t_env	*tmp;
 	size_t	len;
 
-	len = ft_strlen1(var);
+	len = ft_strlen(var);
 	tmp = first;
 	while (tmp)
 	{
@@ -102,9 +114,11 @@ int	main(int argc, char **argv, char **envp)
 	char			**cmd_line;
 	static t_env	*first = NULL;
 
+	(void)argc;
+	(void)argv;
 	buf_size = 2048;
 	dup_env(envp, &first);
-	buffer = (char *)calloc(sizeof(char), buf_size);
+	buffer = (char *)ft_calloc(sizeof(char), buf_size);
 	if (buffer == NULL)
 	{
 		perror("Malloc failure");
@@ -115,7 +129,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		cmd_line = my_str_to_wordtab(buffer, ' ');
 		if (cmd_line[0] == NULL)
-			printf("command not found\n");
+			ft_printf("command not found\n");
 		else if (is_built_in(cmd_line[0]) == false)
 		{
 			get_absolute_path(cmd_line);
@@ -126,7 +140,7 @@ int	main(int argc, char **argv, char **envp)
 		write(1, "~mahaco~ $> ", 12);
 		free_array(cmd_line);
 	}
-	printf("Bye \n");
+	ft_printf("Bye \n");
 	free_lst(&first);
 	free(buffer);
 }

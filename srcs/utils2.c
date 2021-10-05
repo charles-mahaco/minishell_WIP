@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: charles <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/05 16:00:23 by charles           #+#    #+#             */
+/*   Updated: 2021/10/05 16:00:24 by charles          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	**my_str_to_wordtab(char *str, char separator)
@@ -39,10 +51,10 @@ void	add_tail(char *var, t_env **first)
 	t_env	*new_node;
 
 	ptr = (*first);
-	new_node = (t_env *)calloc(sizeof(t_env), 1);
+	new_node = (t_env *)ft_calloc(sizeof(t_env), 1);
 	if (new_node == NULL)
 	{
-		printf("Alloc failure\n");
+		ft_printf("Alloc failure\n");
 		return ;
 	}
 	new_node->var = var;
@@ -81,16 +93,31 @@ void	pop_lst(char *var_name, char *var, t_env **first)
 	char	*newvar;
 
 	ptr = (*first);
-	newvar = calloc(sizeof(char), (ft_strlen1(var_name) + ft_strlen1(var)) + 1);
-	strcat(newvar, var_name);
-	strcat(newvar, var);
+	newvar = ft_calloc(sizeof(char), (ft_strlen(var_name) + ft_strlen(var)) + 1);
+	ft_strcat(newvar, var_name);
+	ft_strcat(newvar, var);
 	while (ptr->next)
 	{
-		if (!ft_strncmp(var_name, ptr->var, ft_strlen1(var_name)))
+		if (!ft_strncmp(var_name, ptr->var, ft_strlen(var_name)))
 		{
 			ptr->var = newvar;
 			break ;
 		}
 		ptr = ptr->next;
 	}
+}
+
+void	free_array(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != NULL)
+	{
+		free(str[i]);
+		str[i] = NULL;
+		i++;
+	}
+	free(str);
+	str = NULL;
 }

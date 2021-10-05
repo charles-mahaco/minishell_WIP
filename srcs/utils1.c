@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils1.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: charles <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/05 16:00:15 by charles           #+#    #+#             */
+/*   Updated: 2021/10/05 16:00:17 by charles          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
@@ -36,7 +48,7 @@ char	*ft_strrchr(const char *s, int c)
 	return (NULL);
 }
 
-size_t	ft_strlen1(const char *s)
+size_t	ft_strlen(const char *s)
 {
 	unsigned int	i;
 
@@ -44,21 +56,6 @@ size_t	ft_strlen1(const char *s)
 	while (s[i])
 		i++;
 	return (i);
-}
-
-void	free_array(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != NULL)
-	{
-		free(str[i]);
-		str[i] = NULL;
-		i++;
-	}
-	free(str);
-	str = NULL;
 }
 
 int	count_word(char *str, char separator)

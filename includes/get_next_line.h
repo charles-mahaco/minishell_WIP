@@ -26,7 +26,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 
-size_t	ft_strlen(char *s, int gnl);
+size_t	ft_strlen1(char *s, int gnl);
 int		is_in_s(char c, char *str);
 char	*ft_strjoin_n_free(char *s1, char *s2);
 char	*ft_substr(char *s, unsigned int start, size_t len);
