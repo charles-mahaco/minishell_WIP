@@ -54,7 +54,7 @@ void	add_tail(char *var, t_env **first)
 	new_node = (t_env *)ft_calloc(sizeof(t_env), 1);
 	if (new_node == NULL)
 	{
-		ft_printf("Alloc failure\n");
+		printf("Alloc failure\n");
 		return ;
 	}
 	new_node->var = var;
@@ -100,6 +100,7 @@ void	pop_lst(char *var_name, char *var, t_env **first)
 	{
 		if (!ft_strncmp(var_name, ptr->var, ft_strlen(var_name)))
 		{
+			free(ptr->var);
 			ptr->var = newvar;
 			break ;
 		}

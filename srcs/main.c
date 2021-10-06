@@ -40,10 +40,11 @@ void	exec_cmd(char **cmd)
 
 void	get_absolute_path(char **cmd)
 {
-	char	*path;
-	char	*bin;
-	char	**path_split;
-	int		i;
+	char		*path;
+	char		*bin;
+	char		**path_split;
+	int			i;
+	struct stat	sb;
 
 	i = -1;
 	path = ft_strdup(getenv("PATH"));
@@ -63,8 +64,8 @@ void	get_absolute_path(char **cmd)
 			ft_strcat(bin, path_split[i]);
 			ft_strcat(bin, "/");
 			ft_strcat(bin, cmd[0]);
-			/*if (access(bin, F_OK) == 0)
-				break ;*/
+			if (stat(bin, &sb) == 0)
+				break ;
 			free(bin);
 			bin = NULL;
 		}
@@ -107,29 +108,46 @@ char	*get_env_var(char *var, t_env *first)
 	return (NULL);
 }
 
+char	*update_prompt(char *buffer, char *prompt, t_data *data)
+{
+	char	*user_dup;
+	char	cwd[PATH_MAX];
+
+	if (data->username == NULL)
+		data->username = getenv("USER");
+	user_dup = strdup(data->username);
+	getcwd(cwd, sizeof(cwd));
+	ft_bzero(prompt, ft_strlen(prompt));
+	prompt = ft_strcat(prompt, user_dup);
+	prompt = ft_strcat(prompt, "@");
+	prompt = ft_strcat(prompt, cwd);
+	prompt = ft_strcat(prompt, "$ ");
+	if (buffer)
+		add_history(buffer);
+	free(user_dup);
+	return(prompt);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char			*buffer;
-	size_t			buf_size;
 	char			**cmd_line;
 	static t_env	*first = NULL;
+	char *prompt;
+	t_data			data;
 
 	(void)argc;
 	(void)argv;
-	buf_size = 2048;
 	dup_env(envp, &first);
-	buffer = (char *)ft_calloc(sizeof(char), buf_size);
-	if (buffer == NULL)
-	{
-		perror("Malloc failure");
-		return (EXIT_FAILURE);
-	}
-	write(1, "~mahaco~ $> ", 12);
-	while (get_next_line(0, &buffer) > 0)
+	data.username = NULL;
+	buffer = NULL;
+	prompt = ft_calloc(sizeof(char), PATH_MAX);
+	prompt = update_prompt(buffer, prompt, &data);
+	while ((buffer = readline(prompt)))
 	{
 		cmd_line = my_str_to_wordtab(buffer, ' ');
 		if (cmd_line[0] == NULL)
-			ft_printf("command not found\n");
+			printf("command not found\n");
 		else if (is_built_in(cmd_line[0]) == false)
 		{
 			get_absolute_path(cmd_line);
@@ -137,10 +155,12 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 			exec_built_in(cmd_line, first);
-		write(1, "~mahaco~ $> ", 12);
+		update_prompt(buffer, prompt, &data);
 		free_array(cmd_line);
+		free(buffer);
 	}
-	ft_printf("Bye \n");
+	printf("Bye \n");
 	free_lst(&first);
 	free(buffer);
+	free(prompt);
 }

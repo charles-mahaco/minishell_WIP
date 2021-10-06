@@ -29,7 +29,7 @@ void	built_in_pwd(void)
 	char	cwd[PATH_MAX];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		ft_printf("%s\n", cwd);
+		printf("%s\n", cwd);
 	else
 		perror("getcwd()");
 }
@@ -41,7 +41,7 @@ void	built_in_env(t_env *head)
 	current_node = head;
 	while (current_node != NULL)
 	{
-		ft_printf("%s\n", current_node->var);
+		printf("%s\n", current_node->var);
 		current_node = current_node->next;
 	}
 }

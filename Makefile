@@ -14,7 +14,7 @@ NAME				= minishell
 CC					= gcc
 RM					= rm -rf
 
-CFLAGS				= -Wall -Wextra -Werror
+CFLAGS				= -Wall -Wextra
 IFLAGS				= -I${INC_DIR}
 
 SRCS_DIR			= srcs
@@ -32,7 +32,7 @@ init:
 					$(shell mkdir -p ${OBJS_DIR})
 
 ${NAME}:			${OBJS}
-					@${CC} ${CFLAGS} ${IFLAGS} -o $@ $^
+					@${CC} ${CFLAGS} ${IFLAGS} -o $@ $^ -lreadline
 					@echo "Done"
 					
 ${OBJS_DIR}/%.o:	%.c
