@@ -35,6 +35,9 @@ typedef struct s_env
 typedef struct s_data
 {
 	char			*username;
+	char			*prompt;
+	char			*buffer;
+	t_env 			*env;
 }					t_data;
 
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -52,15 +55,20 @@ void	built_in_export(char *var, t_env *first);
 void	built_in_echo(char **var);
 void	built_in_unset(char *var, t_env **first);
 bool	is_built_in(char *cmd);
-void	exec_built_in(char **cmd, t_env *first);
+void	exec_built_in(char **cmd, t_data *data);
 void	built_in_cd(char *path, t_env *first);
 void	built_in_pwd(void);
 void	built_in_env(t_env *head);
+void	built_in_exit(char **cmd, t_data *data);
 
 char	*get_env_var(char *var, t_env *first);
 void	dup_env(char **envp, t_env **first);
 void	get_absolute_path(char **cmd);
 void	exec_cmd(char **cmd);
+
+void	set_signals(int context);
+void	handle_interrupt(int sig_num);
+void	handle_interrupt_while_exec(int sig_num);
 
 char	*ft_strcat(char *dest, const char *src);
 char	*ft_strdup(const char *s1);

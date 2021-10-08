@@ -94,24 +94,27 @@ bool	is_built_in(char *cmd)
 		|| !ft_strncmp(cmd, "env", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "export", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "echo", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "unset", ft_strlen(cmd)))
+		|| !ft_strncmp(cmd, "unset", ft_strlen(cmd))
+		|| !ft_strncmp(cmd, "exit", ft_strlen(cmd)))
 		return (true);
 	else
 		return (false);
 }
 
-void	exec_built_in(char **cmd, t_env *first)
+void	exec_built_in(char **cmd, t_data *data)
 {
 	if (!ft_strncmp(cmd[0], "cd", ft_strlen(cmd[0])))
-		built_in_cd(cmd[1], first);
+		built_in_cd(cmd[1], data->env);
 	else if (!ft_strncmp(cmd[0], "pwd", ft_strlen(cmd[0])))
 		built_in_pwd();
 	else if (!ft_strncmp(cmd[0], "env", ft_strlen(cmd[0])))
-		built_in_env(first);
+		built_in_env(data->env);
 	else if (!ft_strncmp(cmd[0], "export", ft_strlen(cmd[0])))
-		built_in_export(cmd[1], first);
+		built_in_export(cmd[1], data->env);
 	else if (!ft_strncmp(cmd[0], "unset", ft_strlen(cmd[0])))
-		built_in_unset(cmd[1], &first);
+		built_in_unset(cmd[1], &data->env);
 	else if (!ft_strncmp(cmd[0], "echo", ft_strlen(cmd[0])))
 		built_in_echo(cmd);
+	else if (!ft_strncmp(cmd[0], "exit", ft_strlen(cmd[0])))
+		built_in_exit(cmd, data);
 }

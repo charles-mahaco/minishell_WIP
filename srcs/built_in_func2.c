@@ -16,6 +16,8 @@ void	built_in_cd(char *path, t_env *first)
 {
 	char	cwd[PATH_MAX];
 
+	if (!path)
+		path = ft_strrchr(get_env_var("HOME=", first), '=') + 1;
 	if (chdir(path) != 0)
 		perror("chdir()");
 	pop_lst("OLDPWD=", ft_strrchr(get_env_var("PWD=", first), '=') + 1, &first);
@@ -44,4 +46,12 @@ void	built_in_env(t_env *head)
 		printf("%s\n", current_node->var);
 		current_node = current_node->next;
 	}
+}
+
+void	built_in_exit(char **cmd, t_data *data)
+{
+	free_array(cmd);
+	free_lst(&data->env);
+	free(data->prompt);
+	exit(3);
 }

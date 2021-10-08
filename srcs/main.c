@@ -130,37 +130,42 @@ char	*update_prompt(char *buffer, char *prompt, t_data *data)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char			*buffer;
 	char			**cmd_line;
-	static t_env	*first = NULL;
-	char *prompt;
+	t_env			*first = NULL;
 	t_data			data;
 
 	(void)argc;
 	(void)argv;
 	dup_env(envp, &first);
+	data.env = first;
 	data.username = NULL;
-	buffer = NULL;
-	prompt = ft_calloc(sizeof(char), PATH_MAX);
-	prompt = update_prompt(buffer, prompt, &data);
-	while ((buffer = readline(prompt)))
+	data.buffer = NULL;
+	data.prompt = ft_calloc(sizeof(char), PATH_MAX);
+	data.prompt = update_prompt(data.buffer, data.prompt, &data);
+	set_signals(1);
+	while ((data.buffer = readline(data.prompt)))
 	{
-		cmd_line = my_str_to_wordtab(buffer, ' ');
-		if (cmd_line[0] == NULL)
-			printf("command not found\n");
-		else if (is_built_in(cmd_line[0]) == false)
+		set_signals(0);
+		if (strncmp(data.buffer, "", ft_strlen(data.buffer)))
 		{
-			get_absolute_path(cmd_line);
-			exec_cmd(cmd_line);
+			cmd_line = my_str_to_wordtab(data.buffer, ' ');
+			if (cmd_line[0] == NULL)
+				printf("command not found\n");
+			else if (is_built_in(cmd_line[0]) == false)
+			{
+				get_absolute_path(cmd_line);
+				exec_cmd(cmd_line);
+			}
+			else
+				exec_built_in(cmd_line, &data);
+			update_prompt(data.buffer, data.prompt, &data);
+			free_array(cmd_line);
 		}
-		else
-			exec_built_in(cmd_line, first);
-		update_prompt(buffer, prompt, &data);
-		free_array(cmd_line);
-		free(buffer);
+		free(data.buffer);
+		set_signals(1);
 	}
-	printf("Bye \n");
+	write(1, "\n", 1);
 	free_lst(&first);
-	free(buffer);
-	free(prompt);
+	free(data.buffer);
+	free(data.prompt);
 }
